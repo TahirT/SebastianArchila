@@ -1,0 +1,133 @@
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #d1d1d1;
+  }
+  
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0px 20px 20px 20px;
+    background-color: rgb(244 244 249);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+  }
+  
+  header h3 {
+    width: 100%;
+    text-align: center;
+    color: rgb(253 241 225);
+    margin-top: 0px;
+    margin-bottom: 20px;
+    padding: 5px 0px 20px 0px;
+    background-image: linear-gradient(to right, rgb(179 19 54), rgb(252 126 84));
+    border-radius: 0px 0px 8px 8px;
+  }
+  
+  .first {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .row {
+    contain: content;
+    
+    display: flex;
+    gap: 20px;
+  }
+  
+  .column {
+    width: 15%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 5px;
+    text-wrap:nowrap;
+    overflow-x: hidden;
+  }
+  
+  input,
+  select,
+  textarea {
+    -webkit-appearance: none;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  select {
+    color: #04027c;
+  }
+  
+  textarea {
+    margin: 10px;
+    height: 180px;
+    resize: none;
+  }
+  
+  .text-area-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rowGuidelines{
+    align-self: center;
+    width: 70%;
+    font-weight: bolder;
+    color:rgb(63, 63, 63);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+  }
+  h4{
+    margin: 10px;
+  }
+  
+  .button-container {
+    text-align: center;
+  }
+
+  #btn1{
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  #btn2 {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: rgb(179 19 54);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  #btn2:hover {
+    background-color: rgba(179, 19, 54, 0.918);
+  }
+  #btn1:hover {
+    cursor: pointer;
+    background-color: rgba(236, 236, 236, 0.918);
+  }

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tender User Search Profile</title>
+  <link rel="stylesheet" href="/static/styles/style.css">
+  <link href="{{ url_for('static', filename= 'styles/style.css')}}" rel="stylesheet" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h3>Tender User Search Profile</h3>
+    </header>
+    <form>
+      <div class="first">
+        <div class="column">
+          <label for="template">Choose a template:</label>
+          <select id="template" name="template">
+            <option value="" disabled>Select a template</option>
+            <option value="Simple Inclusion/Exclusion Template" selected >Simple Inclusion/Exclusion Template</option>
+            <option value="Title/Topic Matching Template" >Title/Topic Matching Template</option>
+            <option value="Date Range Query" >Date Range Query</option>
+            <option value="Proximity Query" >Proximity Query</option>
+            <option value="Multi-field Query" >Multi-field Query</option>
+            <option value="Wildcard Query" >Wildcard Query</option>
+            <option value="Exact Match Query" >Exact Match Query</option>
+            <option value="Nested Queries" >Nested Queries</option>
+            <!-- Add more options as needed -->
+          </select>
+        </div>
+        <div class="column">
+          <label for="industry-info">Enter industry info:</label>
+          <input type="text" id="industry-info" name="industry-info" placeholder="Write here some context...">
+        </div>
+        <div class="column">
+          <label for="previous-conversations">Select previous conversations:</label>
+          <select id="previous-conversations" name="previous-conversations" onchange="changeFunc();">
+            <option value="" disabled selected>Select a previous conversation</option>
+            <!-- Add more options as needed -->
+          </select>
+        </div>
+     
+        <div class="column">
+          <label for="tender-type">Select Tender Type:</label>
+          <select id="tender-type" name="tender-type">
+            <option value="" disabled>Select a tender type</option>
+            <option value="Open Tenders" selected>Open Tenders</option>
+            <option value="Restricted Tenders">Restricted Tenders</option>
+            <option value="Single-Source Tenders">Single-Source Tenders</option>
+            <option value="Framework Agreements">Framework Agreements</option>
+            <option value="E-Tenders">E-Tenders</option>
+            <option value="International Tenders">International Tenders</option>
+            <option value="Expression of Interest (EOI)">Expression of Interest (EOI)</option>
+            <option value="Two-Stage Tenders">Two-Stage Tenders</option>
+            <option value="Competitive Bidding">Competitive Bidding</option>
+            <option value="Design-Build Tenders">Design-Build Tenders</option>
+            <!-- Add more options as needed -->
+          </select>
+        </div>
+        <div class="column">
+          <label for="translate">Translate to:</label>
+          <input type="text" value="English" id="translate" name="translate" placeholder="Email translate to">
+        </div>
+        <div class="column">
+          <label for="tone">Tone of Conversation:</label>
+          <input type="text" value="Technical" id="tone" name="tone" placeholder="Technical, formal, etc.">
+        </div>
+      </div>
+      <button id="btn1" onclick="clearQuery()">New</button>
+      <div class="row">
+        <div class="text-area-column">
+          <textarea id="text-area-1" placeholder="Enter your query here..."></textarea>
+        </div>
+        <div class="text-area-column">
+          <textarea id="text-area-3" placeholder="Generated query here..."></textarea>
+        </div>
+      </div>
+      <div class="rowGuidelines">
+        <h4>Enter your guidelines:</h4>
+        <div>
+        <div class="text-area-column">
+          <textarea id="text-area-2" placeholder="Enter additional requirements here..."></textarea>
+        </div>
+        <div class="button-container">
+          <button id="btn2" type="submit">Send to Chatbot</button>
+        </div>
+      </div>
+      <div>
+      
+    </form>
+  </div>
+
+<script>
+
+  const body = document.getElementById("text-area-1");
+  const guidelines = document.getElementById("text-area-2");
+  const endResult = document.getElementById("text-area-3");
+  const submit_btn = document.getElementById('btn2');
+  const conversation = document.getElementById('previous-conversations');
+
+  var val = 0;
+  
+
+  submit_btn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const template = document.getElementById('template').value;
+  const industry = document.getElementById('industry-info').value;
+  const conv = document.getElementById('previous-conversations').value;
+  const tender = document.getElementById('tender-type').value;
+  const translate = document.getElementById('translate').value;
+  const tone = document.getElementById('tone').value;
+
+  
+  if (body.value == ""){
+  const input = `Generate a random boolean query example which has the Template ${template} about the industry of ${industry} with the Tender-type ${tender} translated in the language: ${translate} and using a tone of Conversation ${tone}`;
+  await getData(input, body);
+
+}
+  else {
+    const input = `${body.value}. Take this and generate an updated boolean query based on these new requriments or instructions: ${guidelines.value}`
+    await getData(input, endResult);
+  
+  } 
+
+
+
+  async function getData(p1, p2) {
+    const response = await fetch("/answer", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        message:p1
+
+      })
+    });
+
+    const reader = response.body.getReader();
+    let output = "";
+    while (true) {
+      const {done, value} = await reader.read();
+      output += new TextDecoder().decode(value);
+
+      p2.innerHTML = output;
+      p2.value = output;
+
+      if(done){
+        return;
+      }
+
+      }
+
+
+    }
+
+    ++val;
+    storeData(body.value,guidelines.value,endResult.value, `${industry} - ${val}`);
+
+
+  })
+
+  function storeData(t1, t2, t3, name) {
+
+    var opt = document.createElement('option');
+    opt.value = name;
+    opt.innerHTML = name;
+    conversation.appendChild(opt);
+
+    const data ={textbox1: t1, textbox2: t2, textbox3: t3};
+    const myData = JSON.stringify(data);
+
+    sessionStorage.setItem(name, myData);
+
+  }
+
+  async function getDataSession(name) {
+
+    var answer = await sessionStorage.getItem(name);
+
+     var ans = JSON.parse(answer);
+
+     body.innerHTML = ans.textbox1;
+     body.value = ans.textbox1;
+     guidelines.innerHTML = ans.textbox2;
+     guidelines.value = ans.textbox2;
+     endResult.innerHTML = ans.textbox3;
+     endResult.value = ans.textbox3;
+    
+}
+
+
+function changeFunc(){
+  var selectedValue = conversation.options[conversation.selectedIndex].value;
+  getDataSession(selectedValue);
+ 
+}
+
+function clearQuery() {
+
+    body.innerHTML = "";
+     body.value = "";
+     guidelines.innerHTML = "";
+     guidelines.value = "";
+     endResult.innerHTML = "";
+     endResult.value = "";
+
+}
+
+</script>
+
+
+</body>
